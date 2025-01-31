@@ -1,6 +1,10 @@
-#include "core.h"
+#include "app.h"
 
-int main() {
-    core::printMessage("Hello from MyApp using core library!");
-    return 0;
+int main(int argc, char* argv[])
+{
+    core::App app;
+
+    const int return_code = app.run("test", 1280, 720, argc, argv);
+
+    return return_code;
 }
