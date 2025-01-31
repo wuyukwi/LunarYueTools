@@ -1,0 +1,10 @@
+[submodule "source/3rdparty/imgui/imgui"]
+	path = source/3rdparty/imgui/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking
+[submodule "source/3rdparty/SDL/SDL3"]
+	path = source/3rdparty/SDL/SDL3
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "source/3rdparty/spdlog/spdlog"]
+	path = source/3rdparty/spdlog/spdlog
+	url = https://github.com/gabime/spdlog.git
