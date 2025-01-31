@@ -1,10 +1,11 @@
 #pragma once
+#include "renderer/renderer.h"
 
 namespace core
 {
-    class VulkanRenderer
+    class VulkanRenderer : public Renderer
     {
     public:
-        void Setup();
+        void Setup() override;
     };
 } // namespace core

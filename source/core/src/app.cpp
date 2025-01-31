@@ -339,11 +339,13 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
 
 #include "app.h"
 #include "cmd_line/parser.hpp"
+#include "logger.hpp"
 #include "system/subsystem.h"
 #include <SDL3/SDL_init.h>
 #include <event/frame_event.h>
 #include <gui/gui.h>
 #include <renderer/renderer.h>
+#include <renderer/vulkan/vulkan_renderer.h>
 #include <window/window.h>
 
 using namespace core;
@@ -351,11 +353,14 @@ using namespace core;
 int App::run(std::string&& title, int w, int h, int argc, char* argv[])
 {
     details::initialize();
-    parser parser(argc, argv);
+    Parser::instance(argc, argv);
+    setup();
+    APPLOG_INFO("App {} setup", title);
 
-    setup(parser);
+    start();
+    APPLOG_INFO("App {} start", title);
 
-    start(parser);
+    APPLOG_INFO(Parser::instance().getOptionsString());
 
     auto window_ = get_subsystem<Window>();
     auto window  = window_.GetWindowPtr();
@@ -584,19 +589,21 @@ int App::run(std::string&& title, int w, int h, int argc, char* argv[])
     return 0;
 }
 
-void core::App::setup(parser& parser)
+void core::App::setup()
 {
+    Logger::init(true, "log/logs.txt", spdlog::level::info);
+
     // Setup SDL
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD) != 0)
     {
-        printf("Error: SDL_Init(): %s\n", SDL_GetError());
+        APPLOG_ERROR("Error: SDL_Init(): {}", SDL_GetError());
     }
 }
 
-void core::App::start(parser& parser)
+void core::App::start()
 {
     add_subsystem<Window>();
-    add_subsystem<Renderer>();
+    add_subsystem<VulkanRenderer>();
     add_subsystem<Gui>();
 }
 

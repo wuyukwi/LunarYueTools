@@ -1,4 +1,5 @@
 #pragma once
+#include "system/subsystem.h"
 
 namespace core
 {

@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
+#include "system/subsystem.h"
 
 namespace core
 {
     class Renderer
     {
     public:
-        Renderer();
-        ~Renderer();
+        virtual void Setup() = 0;
     };
 } // namespace core

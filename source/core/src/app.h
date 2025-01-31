@@ -11,8 +11,8 @@ namespace core
         int run(std::string&& title, int w, int h, int argc, char* argv[]);
 
     protected:
-        void setup(parser& parser);
-        void start(parser& parser);
+        void setup();
+        void start();
         void stop();
         void run_one_frame(float dt);
 
