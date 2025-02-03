@@ -8,14 +8,15 @@ namespace core
     class Window
     {
     public:
-        Window();
+        Window(const std::string& title, int w, int h, SDL_WindowFlags flags);
         ~Window();
 
-        float GetDeltaTime();
+        SDL_Window* get_sdl_window_ptr() { return window_; }
+        uint32_t    get_id();
 
-        uint64_t GetTicks();
+        void get_size(int& width, int& height) const;
 
-        SDL_Window* GetWindowPtr() { return window_; }
+        SDL_WindowFlags get_flags();
 
     private:
         SDL_Window* window_;

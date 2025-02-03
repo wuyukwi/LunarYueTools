@@ -8,7 +8,7 @@ namespace core
     class App
     {
     public:
-        int run(std::string&& title, int w, int h, int argc, char* argv[]);
+        int run(const std::string& title, int w, int h, int argc, char* argv[]);
 
     protected:
         void setup();

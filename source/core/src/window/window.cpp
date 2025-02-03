@@ -1,22 +1,29 @@
 #include "window.h"
+#include "logger.h"
 #include <SDL3/SDL_timer.h>
 namespace core
 {
-    Window::Window()
+    Window::Window(const std::string& title, int w, int h, SDL_WindowFlags flags)
     {
         SDL_WindowFlags window_flags =
             (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_HIDDEN);
-        window_ = SDL_CreateWindow("app", 1280, 720, window_flags);
+        window_ = SDL_CreateWindow(title.c_str(), w, h, flags);
         if (window_ == nullptr)
         {
-            printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
+            APPLOG_ERROR("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
         }
     }
 
-    core::Window::~Window() {}
+    core::Window::~Window()
+    {
+        if (window_)
+        {
+            SDL_DestroyWindow(window_);
+        }
+    }
 
-    float core::Window::GetDeltaTime() { return 0.0f; }
+    uint32_t Window::get_id() { return SDL_GetWindowID(window_); }
 
-    uint64_t core::Window::GetTicks() { return SDL_GetTicks(); }
-
+    void            Window::get_size(int& width, int& height) const { SDL_GetWindowSize(window_, &width, &height); }
+    SDL_WindowFlags Window::get_flags() { return SDL_GetWindowFlags(window_); }
 } // namespace core

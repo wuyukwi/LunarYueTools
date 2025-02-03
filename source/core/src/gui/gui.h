@@ -8,5 +8,6 @@ namespace core
     public:
         Gui();
         ~Gui();
+        void ui_renderer(float dt);
     };
 } // namespace core
