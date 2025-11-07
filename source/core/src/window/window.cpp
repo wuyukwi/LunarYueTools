@@ -1,29 +1,37 @@
 #include "window.h"
-#include "logger.h"
-#include <SDL3/SDL_timer.h>
+#include <SDL3/SDL_video.h>
+#include <logger.h>
+#include <stdexcept>
+
 namespace core
 {
-    Window::Window(const std::string& title, int w, int h, SDL_WindowFlags flags)
+
+    Window::Window(const std::string& title, int w, int h, SDL_WindowFlags flags) : flags_(flags)
     {
-        SDL_WindowFlags window_flags =
-            (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_HIDDEN);
-        window_ = SDL_CreateWindow(title.c_str(), w, h, flags);
-        if (window_ == nullptr)
+        window_ = SDL_CreateWindow(title.c_str(), w, h, flags_);
+        if (!window_)
         {
-            APPLOG_ERROR("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
+            APPLOG_ERROR(std::string("Failed to create SDL window: ") + SDL_GetError());
         }
     }
 
-    core::Window::~Window()
+    Window::~Window()
     {
         if (window_)
         {
             SDL_DestroyWindow(window_);
+            window_ = nullptr;
         }
     }
 
-    uint32_t Window::get_id() { return SDL_GetWindowID(window_); }
+    uint32_t Window::get_id() const noexcept { return window_ ? SDL_GetWindowID(window_) : 0; }
 
-    void            Window::get_size(int& width, int& height) const { SDL_GetWindowSize(window_, &width, &height); }
-    SDL_WindowFlags Window::get_flags() { return SDL_GetWindowFlags(window_); }
+    void Window::get_size(int& width, int& height) const noexcept
+    {
+        if (window_)
+        {
+            SDL_GetWindowSize(window_, &width, &height);
+        }
+    }
+
 } // namespace core

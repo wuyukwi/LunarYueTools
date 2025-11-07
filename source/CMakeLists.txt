@@ -1,5 +1,6 @@
 ﻿set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 include(macros)
+include(CPM)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_options("/MP")
@@ -7,6 +8,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 set_output_paths()
+print_info()
 
 add_subdirectory_ex(3rdparty)
 add_subdirectory_ex(core)

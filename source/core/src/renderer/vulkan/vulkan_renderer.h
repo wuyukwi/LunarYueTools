@@ -1,5 +1,7 @@
 #pragma once
+#include "event/EventSubscriber.h"
 #include "event/frame_event.h"
+#include "event/sdl_event.h"
 #include "imgui_impl_vulkan.h"
 #include "renderer/renderer.h"
 #include "vulkan/vulkan.h"
@@ -7,7 +9,7 @@
 
 namespace core
 {
-    class VulkanRenderer : public Renderer
+    class VulkanRenderer : public EventSubscriber
     {
     public:
         VulkanRenderer() :
@@ -18,12 +20,12 @@ namespace core
         }
 
         ~VulkanRenderer();
-        void Setup() override;
+        void Setup();
 
-        void pool_event(SDL_Event* event);
+        void pool_event(const SDLEvent& event);
 
-        void frame_update(float dt);
-        void frame_render(float dt);
+        void frame_update(const FrameUpdate& dt);
+        void frame_render(const FrameRender& dt);
 
     protected:
         VkAllocationCallbacks*   allocator_;

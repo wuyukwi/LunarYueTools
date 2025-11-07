@@ -1,7 +1,5 @@
 #pragma once
 
-#include "event/event_bus.h"
-
 namespace core
 {
     struct FrameBegin

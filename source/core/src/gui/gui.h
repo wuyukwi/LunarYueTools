@@ -1,13 +1,14 @@
 #pragma once
-#include "system/subsystem.h"
+#include "event/EventSubscriber.h"
+#include <event/frame_event.h>
 
 namespace core
 {
-    class Gui
+    class Gui : public EventSubscriber
     {
     public:
         Gui();
         ~Gui();
-        void ui_renderer(float dt);
+        void ui_renderer(const FrameUiRender& event);
     };
 } // namespace core

@@ -19,6 +19,7 @@
 #include <SDL3/SDL_vulkan.h>
 #include <imgui_impl_sdl3.h>
 
+#include <event/EventManager.h>
 #include <event/sdl_event.h>
 #include <window/window_manager.h>
 namespace core
@@ -71,6 +72,7 @@ namespace core
 
         CleanupVulkanWindow();
         CleanupVulkan();
+        disconnect(*this);
     }
 
     void core::VulkanRenderer::Setup()
@@ -250,19 +252,18 @@ namespace core
         init_info.CheckVkResultFn           = check_vk_result;
         ImGui_ImplVulkan_Init(&init_info);
 
-        auto& bus = EventBus::instance();
-        bus.subscribe<FrameUpdate>([this](auto&& event) { frame_update(event.delta_time); });
-        bus.subscribe<FrameRender>([this](auto&& event) { frame_render(event.delta_time); });
-        bus.subscribe<SDLEvent>([this](auto&& event) { pool_event(event.event); });
+        connect<FrameUpdate, VulkanRenderer, &VulkanRenderer::frame_update>(*this);
+        connect<FrameRender, VulkanRenderer, &VulkanRenderer::frame_render>(*this);
+        connect<SDLEvent, VulkanRenderer, &VulkanRenderer::pool_event>(*this);
     }
 
-    void VulkanRenderer::pool_event(SDL_Event* event) { ImGui_ImplSDL3_ProcessEvent(event); }
+    void VulkanRenderer::pool_event(const SDLEvent& event) { ImGui_ImplSDL3_ProcessEvent(event.event); }
 
-    void VulkanRenderer::frame_update(float dt)
+    void VulkanRenderer::frame_update(const FrameUpdate& dt)
     {
         // Resize swap chain?
         int fb_width, fb_height;
-        get_subsystem<WindowManager>().get_main_window()->get_size(fb_width, fb_height);
+        get_subsystem<WindowManager>().get_size(fb_width, fb_height);
         if (fb_width > 0 && fb_height > 0 && (swapChainRebuild_ || mainWindowData_.Width != fb_width || mainWindowData_.Height != fb_height))
         {
             ImGui_ImplVulkan_SetMinImageCount(minImageCount_);
@@ -277,7 +278,7 @@ namespace core
         ImGui::NewFrame();
     }
 
-    void VulkanRenderer::frame_render(float dt)
+    void VulkanRenderer::frame_render(const FrameRender& dt)
     {
         ImGui::Render();
 

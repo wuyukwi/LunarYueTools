@@ -1,6 +1,11 @@
-cmake_minimum_required(VERSION 3.10)
+CPMAddPackage(
+  NAME imgui
+  GITHUB_REPOSITORY ocornut/imgui
+  GIT_TAG v1.91.8-docking
+  DOWNLOAD_ONLY TRUE
+)
 
-set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
+set(IMGUI_DIR ${imgui_SOURCE_DIR})
 set(IMGUI_BACKENDS_DIR ${IMGUI_DIR}/backends)
 set(LIB_NAME imgui)
 
@@ -98,6 +103,6 @@ if (IMGUI_BACKEND_DX12)
     target_link_libraries(${LIB_NAME} PUBLIC dxgi d3d12)
 endif()
 
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${IMGUI_SOURCES})
+source_group(TREE "${imgui_SOURCE_DIR}" FILES ${IMGUI_SOURCES})
 
 set_target_properties(${LIB_NAME} PROPERTIES FOLDER ${THIRD_PARTY_FOLDER})

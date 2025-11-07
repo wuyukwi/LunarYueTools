@@ -2,23 +2,18 @@
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
 #include "system/subsystem.h"
-#include <window/window.h>
-
 #include <event/frame_event.h>
+
 namespace core
 {
-    core::Gui::Gui()
-    {
-        auto& bus = EventBus::instance();
-        bus.subscribe<FrameUiRender>([this](auto&& event) { ui_renderer(event.delta_time); });
-    }
+    core::Gui::Gui() { connect<FrameUiRender, Gui, &Gui::ui_renderer>(*this); }
 
-    core::Gui::~Gui() {}
+    core::Gui::~Gui() { disconnect(*this); }
 
-    void Gui::ui_renderer(float dt)
+    void Gui::ui_renderer(const FrameUiRender& event)
     {
         // Our state
-        static bool show_demo_window    = true;
+        static bool show_demo_window    = false;
         static bool show_another_window = false;
 
         // Main loop
@@ -34,15 +29,15 @@ namespace core
             static float f       = 0.0f;
             static int   counter = 0;
 
-            ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Hello, world!");
 
-            ImGui::Text("This is some useful text.");          // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window); // Edit bools storing our window open/close state
+            ImGui::Text("This is some useful text.");
+            ImGui::Checkbox("Demo Window", &show_demo_window);
             ImGui::Checkbox("Another Window", &show_another_window);
 
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 
-            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+            if (ImGui::Button("Button"))
                 counter++;
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
@@ -51,11 +46,9 @@ namespace core
             ImGui::End();
         }
 
-        // 3. Show another simple window.
         if (show_another_window)
         {
-            ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button
-                                                                  // that will clear the bool when clicked)
+            ImGui::Begin("Another Window", &show_another_window);
             ImGui::Text("Hello from another window!");
             if (ImGui::Button("Close Me"))
                 show_another_window = false;

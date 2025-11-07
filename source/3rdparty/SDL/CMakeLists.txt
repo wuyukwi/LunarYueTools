@@ -1,3 +1,10 @@
-add_subdirectory(SDL3 EXCLUDE_FROM_ALL)
+CPMAddPackage(
+    NAME SDL3
+    GITHUB_REPOSITORY libsdl-org/SDL
+    GIT_TAG release-3.2.26
+    DOWNLOAD_ONLY YES
+)
+
+add_subdirectory(${SDL3_SOURCE_DIR} ${SDL3_BINARY_DIR} EXCLUDE_FROM_ALL)
 set_target_properties(SDL3-shared PROPERTIES FOLDER ${THIRD_PARTY_FOLDER}/SDL3)
 set_target_properties(SDL_uclibc PROPERTIES FOLDER ${THIRD_PARTY_FOLDER}/SDL3)
